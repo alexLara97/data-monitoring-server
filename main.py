@@ -10,6 +10,7 @@ def main():
     db_path_directory = settings.get("db_file_path_directory")
     print("Creating socket communication...\n")
     # Data
+    
     # Network
     print("Communication successfully created in {}:{}\n".format(ip_target, port_target))
     time.sleep(0.5)

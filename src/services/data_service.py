@@ -1,10 +1,13 @@
 import datetime
 import os
+import time
 
 from src.data_persistence.temperature import Temperature
 
 
 class DataService:
+
+    SENSOR_TEMPERATURE = 1
 
     def __init__(self, db_path: str, db_write_interval_ms: int = 1000):
         self.temperature = None
@@ -24,7 +27,8 @@ class DataService:
         self.temperature = Temperature(self.db_path)
         self.path_db_temperature = os.path.join(self.db_path, Temperature.DB_NAME)
 
-        os.remove(self.path_db_temperature)
+        if os.path.exists(self.path_db_temperature):
+            os.remove(self.path_db_temperature)
         self._create_db_env()
 
     def _create_db_env(self):
@@ -38,11 +42,12 @@ class DataService:
         self.temperature.open_connection()
         temperature = []
         try:
-            if "Temperature" in data:
-                temperature = data["Temperature"]
+            sensor_id = data.get("sensor_id")
+            if sensor_id == self.SENSOR_TEMPERATURE:
+                temperature = data
 
             if len(temperature) > 0:
-                self._process_temperature_db(temperature, data["Timestamp"])
+                self._process_temperature_db(temperature)
 
         except Exception as ex:
             print(ex)
@@ -52,16 +57,11 @@ class DataService:
             self.__last_db_write_datetime = current_datetime
             self._insert_temperature_db()
 
-    def _process_temperature_db(self, data: list, time_stamp: int):
-        for i in data:
-            adjacent = {"TIME": time_stamp,
-                        "SENSOR_ID": i["sensor_id"],
-                        "VALUE": i["value"],
-                        }
-            self.__temperature_records.append(adjacent)
+    def _process_temperature_db(self, data: dict):
+            temp = {"TIME": int(time.time()), "SENSOR_ID": data.get("sensor_id"), "VALUE": data.get("value")}
+            self.__temperature_records.append(temp)
 
     def _insert_temperature_db(self):
-        # print("Inserting " + str(len(self.__adjacent_records)) + " registers in adjacent table...")
         res = self.temperature.insert_data_table_temperature(self.__temperature_records)
         if not res:
             print("Not inserted correctly in temperature table db")

@@ -21,7 +21,6 @@ class ServerUDP:
         data = None
         try:
             data, remote_address = self._listen_socket.recvfrom(SOCKET_BUFFER_SIZE)
-            print(data)
             if data:
                 self._callback_fcn(data)
         except Exception as ex:

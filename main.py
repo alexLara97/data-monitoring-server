@@ -12,9 +12,11 @@ def main():
     ip_target, port_target = settings.get("socket_ip"), settings.get("socket_port")
     db_write_interval_ms = settings.get("db_write_interval_ms")
     db_path_directory = settings.get("db_file_path_directory")
+    db_empty_table_interval_ms = settings.get("db_empty_table_interval_ms")
     print("Creating socket communication...\n")
     # Data
-    data_service = DataService(db_path=db_path_directory, db_write_interval_ms=db_write_interval_ms)
+    data_service = DataService(db_path=db_path_directory, db_write_interval_ms=db_write_interval_ms,
+                               db_empty_table_interval_ms=db_empty_table_interval_ms)
     data_service.start()
     # Network
     communication_service = CommunicationService(ip_target=ip_target, port_target=port_target,

@@ -2,5 +2,6 @@
     "socket_ip": "192.168.1.130",
     "socket_port": 15000,
     "db_write_interval_ms": 1000,
+    "db_empty_table_interval_ms": 1800000,
     "db_file_path_directory": "C:\\Users\\Alejandro\\Desktop\\DB"
 }

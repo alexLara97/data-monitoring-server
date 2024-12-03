@@ -43,7 +43,7 @@ class DataService:
             self._insert_temperature_db()
 
         if self._time_to_empty_tables():
-            self.temperature.dell_data_table()
+            self.temperature.empty_table_traffic()
 
     def _process_temperature_db(self, data: dict):
             self.__temperature_records.append({"TIME": int(time.time()), "SENSOR_ID": data.get("sensor_id"), "VALUE": data.get("value")})

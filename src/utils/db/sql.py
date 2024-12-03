@@ -111,6 +111,9 @@ class SqlUtils:
             cursor = connection.cursor()
             cursor.execute(sql)
             connection.commit()
+            cursor.execute("PRAGMA synchronous=normal;")
+            cursor.execute("PRAGMA journal_mode=WAL;")
+            connection.commit()
             check = True
         except Exception as ex:
             check = False
